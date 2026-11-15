@@ -35,7 +35,8 @@ async function render() {
       app.innerHTML = profile(p);
     } else {
       document.title = 'make.fun bounties';
-      app.innerHTML = board(await getBounties());
+      const filter = new URLSearchParams(location.hash.slice(1)).get('f') ?? 'open';
+      app.innerHTML = board(await getBounties(), filter);
     }
   } catch (err) {
     app.innerHTML = `<p class="error">Could not load: ${String(err.message ?? err)}</p>`;

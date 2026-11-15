@@ -40,6 +40,10 @@ h2 { font-size: 1.15rem; margin: 28px 0 8px; }
 
 /* Bounty board */
 .board { list-style: none; padding: 0; display: grid; gap: 12px; }
+.filter-row { color: var(--dim); font-size: 0.9rem; margin: 8px 0 0; }
+.filter-row a { color: var(--dim); margin-right: 12px; }
+.filter-row a[aria-current='page'] { color: var(--accent); font-weight: 600; }
+footer { margin-top: 32px; color: var(--dim); font-size: 0.85rem; }
 .card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -98,3 +102,11 @@ dd.reward { color: var(--accent2); font-weight: 700; }
 .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--card); border: 1px solid var(--line); object-fit: cover; }
 .avatar.fallback::before { content: '◆'; display: flex; align-items: center; justify-content: center; height: 100%; color: var(--accent); }
 .lb .avatar { width: 22px; height: 22px; }
+
+/* Small screens: single column, tighter type, tables scroll sideways. */
+@media (max-width: 640px) {
+  .card-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  h1 { font-size: 1.25rem; }
+  .lb { font-size: 0.8rem; }
+  .table-wrap { overflow-x: auto; }
+}

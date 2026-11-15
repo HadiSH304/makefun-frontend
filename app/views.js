@@ -20,14 +20,20 @@ const avatar = (handle, image) =>
     ? `<img class="avatar" src="${esc(image)}" alt="" crossorigin="anonymous" loading="lazy">`
     : '<span class="avatar fallback"></span>';
 
-export function board(data) {
+export function board(data, filter = 'open') {
   const items = data.items.slice().sort((a, b) => {
     const open = isOpen(b) - isOpen(a);
     if (open) return open;
     return new Date(a.deadline) - new Date(b.deadline);
   });
-  const totalPot = items.reduce((sum, b) => sum + Number(b.potUsd ?? b.rewardAmount ?? 0), 0);
-  const rows = items
+  const open = items.filter(isOpen);
+  const closed = items.filter((b) => !isOpen(b));
+  const counts = (f) => (f === 'closed' ? closed : open);
+  const shown = counts(filter);
+  const totalPot = shown.reduce((sum, b) => sum + Number(b.potUsd ?? b.rewardAmount ?? 0), 0);
+  const link = (f, label) =>
+    `<a class="filter" href="#/?f=${f}"${filter === f ? ' aria-current="page"' : ''}>${label}</a>`;
+  const rows = shown
     .map(
       (b) => `
       <li class="card">
@@ -45,8 +51,9 @@ export function board(data) {
       </li>`,
     )
     .join('');
-  return `<h1>Open bounties</h1>
-  <p class="lede">${items.length} bounties, ${money(totalPot)} in pots</p>
+  return `<h1>${filter === 'closed' ? 'Closed bounties' : 'Open bounties'}</h1>
+  <p class="lede">${shown.length} bounties, ${money(totalPot)} in pots</p>
+  <p class="filter-row">${link('open', `${open.length} open`)} · ${link('closed', `${closed.length} closed`)}</p>
   <ul class="board">${rows}</ul>`;
 }
 

@@ -12,6 +12,9 @@ async function get(path) {
 /** The open bounties: { items: [...] } (activity=times leaves out the activity a board does not show). */
 export const getBounties = () => get('/competitions?status=open&activity=times');
 
+/** Recently resolved bounties, for the board's closed filter. */
+export const getResolved = () => get('/competitions?status=resolved&activity=times');
+
 /** One bounty, by its slug. */
 export const getBounty = (slug) => get(`/competitions/${encodeURIComponent(slug)}`);
 

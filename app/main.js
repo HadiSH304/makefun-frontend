@@ -8,7 +8,7 @@
 // window.__shotReady is false while a page loads and true once its data is on screen, so a
 // screenshot script knows when to capture.
 
-import { getBounties, getBounty, getLeaderboard, getProfile } from './api.js';
+import { getBounties, getResolved, getBounty, getLeaderboard, getProfile } from './api.js';
 import { board, bounty, leaderboard, profile } from './views.js';
 
 const app = document.getElementById('app');
@@ -36,7 +36,8 @@ async function render() {
     } else {
       document.title = 'make.fun bounties';
       const filter = new URLSearchParams(location.hash.slice(1)).get('f') ?? 'open';
-      app.innerHTML = board(await getBounties(), filter);
+      const [openData, resolvedData] = await Promise.all([getBounties(), getResolved()]);
+      app.innerHTML = board({ items: [...openData.items, ...resolvedData.items] }, filter);
     }
   } catch (err) {
     app.innerHTML = `<p class="error">Could not load: ${String(err.message ?? err)}</p>`;
